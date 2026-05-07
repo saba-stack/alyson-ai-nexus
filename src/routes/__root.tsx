@@ -72,14 +72,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Alyson · AI Local News Intelligence" },
+      { name: "description", content: "AI-powered local news content management, analytics and distribution across 50 US cities." },
+      { property: "og:title", content: "Alyson · AI Local News Intelligence" },
+      { property: "og:description", content: "AI-powered local news content management, analytics and distribution across 50 US cities." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -108,12 +106,19 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+import { Sidebar } from "@/components/Sidebar";
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <div className="min-h-screen bg-background">
+        <Sidebar />
+        <main className="md:pl-60">
+          <Outlet />
+        </main>
+      </div>
     </QueryClientProvider>
   );
 }
