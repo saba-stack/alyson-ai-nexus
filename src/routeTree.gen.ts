@@ -9,38 +9,254 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SubscribersRouteImport } from './routes/subscribers'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as RankingsRouteImport } from './routes/rankings'
+import { Route as ModerationRouteImport } from './routes/moderation'
+import { Route as IntegrationsRouteImport } from './routes/integrations'
+import { Route as EmailRouteImport } from './routes/email'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as AiPipelineRouteImport } from './routes/ai-pipeline'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CitiesIndexRouteImport } from './routes/cities.index'
+import { Route as ArticlesIndexRouteImport } from './routes/articles.index'
+import { Route as CitiesCityIdRouteImport } from './routes/cities.$cityId'
+import { Route as ArticlesArticleIdRouteImport } from './routes/articles.$articleId'
 
+const SubscribersRoute = SubscribersRouteImport.update({
+  id: '/subscribers',
+  path: '/subscribers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RankingsRoute = RankingsRouteImport.update({
+  id: '/rankings',
+  path: '/rankings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ModerationRoute = ModerationRouteImport.update({
+  id: '/moderation',
+  path: '/moderation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntegrationsRoute = IntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmailRoute = EmailRouteImport.update({
+  id: '/email',
+  path: '/email',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiPipelineRoute = AiPipelineRouteImport.update({
+  id: '/ai-pipeline',
+  path: '/ai-pipeline',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CitiesIndexRoute = CitiesIndexRouteImport.update({
+  id: '/cities/',
+  path: '/cities/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
+  id: '/articles/',
+  path: '/articles/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CitiesCityIdRoute = CitiesCityIdRouteImport.update({
+  id: '/cities/$cityId',
+  path: '/cities/$cityId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArticlesArticleIdRoute = ArticlesArticleIdRouteImport.update({
+  id: '/articles/$articleId',
+  path: '/articles/$articleId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ai-pipeline': typeof AiPipelineRoute
+  '/analytics': typeof AnalyticsRoute
+  '/email': typeof EmailRoute
+  '/integrations': typeof IntegrationsRoute
+  '/moderation': typeof ModerationRoute
+  '/rankings': typeof RankingsRoute
+  '/settings': typeof SettingsRoute
+  '/subscribers': typeof SubscribersRoute
+  '/articles/$articleId': typeof ArticlesArticleIdRoute
+  '/cities/$cityId': typeof CitiesCityIdRoute
+  '/articles/': typeof ArticlesIndexRoute
+  '/cities/': typeof CitiesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai-pipeline': typeof AiPipelineRoute
+  '/analytics': typeof AnalyticsRoute
+  '/email': typeof EmailRoute
+  '/integrations': typeof IntegrationsRoute
+  '/moderation': typeof ModerationRoute
+  '/rankings': typeof RankingsRoute
+  '/settings': typeof SettingsRoute
+  '/subscribers': typeof SubscribersRoute
+  '/articles/$articleId': typeof ArticlesArticleIdRoute
+  '/cities/$cityId': typeof CitiesCityIdRoute
+  '/articles': typeof ArticlesIndexRoute
+  '/cities': typeof CitiesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ai-pipeline': typeof AiPipelineRoute
+  '/analytics': typeof AnalyticsRoute
+  '/email': typeof EmailRoute
+  '/integrations': typeof IntegrationsRoute
+  '/moderation': typeof ModerationRoute
+  '/rankings': typeof RankingsRoute
+  '/settings': typeof SettingsRoute
+  '/subscribers': typeof SubscribersRoute
+  '/articles/$articleId': typeof ArticlesArticleIdRoute
+  '/cities/$cityId': typeof CitiesCityIdRoute
+  '/articles/': typeof ArticlesIndexRoute
+  '/cities/': typeof CitiesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/ai-pipeline'
+    | '/analytics'
+    | '/email'
+    | '/integrations'
+    | '/moderation'
+    | '/rankings'
+    | '/settings'
+    | '/subscribers'
+    | '/articles/$articleId'
+    | '/cities/$cityId'
+    | '/articles/'
+    | '/cities/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/ai-pipeline'
+    | '/analytics'
+    | '/email'
+    | '/integrations'
+    | '/moderation'
+    | '/rankings'
+    | '/settings'
+    | '/subscribers'
+    | '/articles/$articleId'
+    | '/cities/$cityId'
+    | '/articles'
+    | '/cities'
+  id:
+    | '__root__'
+    | '/'
+    | '/ai-pipeline'
+    | '/analytics'
+    | '/email'
+    | '/integrations'
+    | '/moderation'
+    | '/rankings'
+    | '/settings'
+    | '/subscribers'
+    | '/articles/$articleId'
+    | '/cities/$cityId'
+    | '/articles/'
+    | '/cities/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AiPipelineRoute: typeof AiPipelineRoute
+  AnalyticsRoute: typeof AnalyticsRoute
+  EmailRoute: typeof EmailRoute
+  IntegrationsRoute: typeof IntegrationsRoute
+  ModerationRoute: typeof ModerationRoute
+  RankingsRoute: typeof RankingsRoute
+  SettingsRoute: typeof SettingsRoute
+  SubscribersRoute: typeof SubscribersRoute
+  ArticlesArticleIdRoute: typeof ArticlesArticleIdRoute
+  CitiesCityIdRoute: typeof CitiesCityIdRoute
+  ArticlesIndexRoute: typeof ArticlesIndexRoute
+  CitiesIndexRoute: typeof CitiesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/subscribers': {
+      id: '/subscribers'
+      path: '/subscribers'
+      fullPath: '/subscribers'
+      preLoaderRoute: typeof SubscribersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rankings': {
+      id: '/rankings'
+      path: '/rankings'
+      fullPath: '/rankings'
+      preLoaderRoute: typeof RankingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/moderation': {
+      id: '/moderation'
+      path: '/moderation'
+      fullPath: '/moderation'
+      preLoaderRoute: typeof ModerationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/integrations': {
+      id: '/integrations'
+      path: '/integrations'
+      fullPath: '/integrations'
+      preLoaderRoute: typeof IntegrationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/email': {
+      id: '/email'
+      path: '/email'
+      fullPath: '/email'
+      preLoaderRoute: typeof EmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-pipeline': {
+      id: '/ai-pipeline'
+      path: '/ai-pipeline'
+      fullPath: '/ai-pipeline'
+      preLoaderRoute: typeof AiPipelineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +264,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cities/': {
+      id: '/cities/'
+      path: '/cities'
+      fullPath: '/cities/'
+      preLoaderRoute: typeof CitiesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/articles/': {
+      id: '/articles/'
+      path: '/articles'
+      fullPath: '/articles/'
+      preLoaderRoute: typeof ArticlesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cities/$cityId': {
+      id: '/cities/$cityId'
+      path: '/cities/$cityId'
+      fullPath: '/cities/$cityId'
+      preLoaderRoute: typeof CitiesCityIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/articles/$articleId': {
+      id: '/articles/$articleId'
+      path: '/articles/$articleId'
+      fullPath: '/articles/$articleId'
+      preLoaderRoute: typeof ArticlesArticleIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AiPipelineRoute: AiPipelineRoute,
+  AnalyticsRoute: AnalyticsRoute,
+  EmailRoute: EmailRoute,
+  IntegrationsRoute: IntegrationsRoute,
+  ModerationRoute: ModerationRoute,
+  RankingsRoute: RankingsRoute,
+  SettingsRoute: SettingsRoute,
+  SubscribersRoute: SubscribersRoute,
+  ArticlesArticleIdRoute: ArticlesArticleIdRoute,
+  CitiesCityIdRoute: CitiesCityIdRoute,
+  ArticlesIndexRoute: ArticlesIndexRoute,
+  CitiesIndexRoute: CitiesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
