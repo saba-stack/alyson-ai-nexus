@@ -78,6 +78,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "AI-powered local news content management, analytics and distribution across 50 US cities." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Alyson · AI Local News Intelligence" },
+      { name: "twitter:description", content: "AI-powered local news content management, analytics and distribution across 50 US cities." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/87e8960d-dec6-4af2-8417-26012af46743/id-preview-719d0d83--6a26d9e6-c0bb-4248-ba66-dc4faef42bef.lovable.app-1778160798925.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/87e8960d-dec6-4af2-8417-26012af46743/id-preview-719d0d83--6a26d9e6-c0bb-4248-ba66-dc4faef42bef.lovable.app-1778160798925.png" },
     ],
     links: [
       {
