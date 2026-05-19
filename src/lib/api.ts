@@ -1,10 +1,10 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+const API_BASE_URL = "https://reasonable-acceptance-production.up.railway.app";
 
 export async function apiFetch<T = unknown>(
   path: string,
   options?: RequestInit
 ): Promise<T> {
-  const url = path.startsWith("http") ? path : `${API_BASE_URL.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
+  const url = `${API_BASE_URL}/${path.replace(/^\//, "")}`;
 
   const response = await fetch(url, {
     headers: {
@@ -19,6 +19,86 @@ export async function apiFetch<T = unknown>(
   }
 
   return response.json() as Promise<T>;
+}
+
+// API functions for each endpoint
+
+export async function fetchCities() {
+  try {
+    const res = await apiFetch<{ success: boolean; data: any[] }>("api/cities");
+    return res.data || [];
+  } catch {
+    return null; // returns null if API fails - fallback to mock data
+  }
+}
+
+export async function fetchArticles(params?: { cityId?: string; status?: string; limit?: number }) {
+  try {
+    const query = new URLSearchParams();
+    if (params?.cityId) query.set("cityId", params.cityId);
+    if (params?.status) query.set("status", params.status);
+    if (params?.limit) query.set("limit", String(params.limit));
+    const res = await apiFetch<{ success: boolean; data: any[] }>(`api/articles?${query}`);
+    return res.data || [];
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchDashboardMetrics() {
+  try {
+    const res = await apiFetch<{ success: boolean; data: any }>("api/analytics/overview");
+    return res.data || null;
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchSubscribers(cityId?: string) {
+  try {
+    const query = cityId ? `?cityId=${cityId}` : "";
+    const res = await apiFetch<{ success: boolean; data: any[] }>(`api/subscribers${query}`);
+    return res.data || [];
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchCampaigns() {
+  try {
+    const res = await apiFetch<{ success: boolean; data: any[] }>("api/emails/campaigns");
+    return res.data || [];
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchModerationQueue() {
+  try {
+    const res = await apiFetch<{ success: boolean; data: any[] }>("api/moderation/queue");
+    return res.data || [];
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchRankings(cityId?: string) {
+  try {
+    const query = cityId ? `/${cityId}` : "";
+    const res = await apiFetch<{ success: boolean; data: any[] }>(`api/ranking${query}`);
+    return res.data || [];
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchIntegrations() {
+  try {
+    const res = await apiFetch<{ success: boolean; data: any[] }>("api/integrations");
+    return res.data || [];
+  } catch {
+    return null;
+  }
 }
 
 export { API_BASE_URL };
