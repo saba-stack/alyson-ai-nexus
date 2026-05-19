@@ -110,14 +110,19 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-import { AuthGate } from "@/components/AuthGate";
+import { Sidebar } from "@/components/Sidebar";
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthGate />
+      <div className="min-h-screen bg-background">
+        <Sidebar />
+        <main className="md:pl-60">
+          <Outlet />
+        </main>
+      </div>
     </QueryClientProvider>
   );
 }
