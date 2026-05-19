@@ -1,3 +1,5 @@
+import { supabase } from "@/integrations/supabase/client";
+
 const API_BASE_URL = "https://reasonable-acceptance-production.up.railway.app";
 
 export async function apiFetch<T = unknown>(
@@ -6,12 +8,21 @@ export async function apiFetch<T = unknown>(
 ): Promise<T> {
   const url = `${API_BASE_URL}/${path.replace(/^\//, "")}`;
 
+  // Attach the authenticated user's bearer token so the backend can
+  // independently verify identity. Falls back to no Authorization header
+  // when the user isn't signed in (request will be rejected server-side).
+  const { data: { session } } = await supabase.auth.getSession();
+  const authHeader: Record<string, string> = session?.access_token
+    ? { Authorization: `Bearer ${session.access_token}` }
+    : {};
+
   const response = await fetch(url, {
+    ...options,
     headers: {
       "Content-Type": "application/json",
+      ...authHeader,
       ...(options?.headers || {}),
     },
-    ...options,
   });
 
   if (!response.ok) {
@@ -28,7 +39,7 @@ export async function fetchCities() {
     const res = await apiFetch<{ success: boolean; data: any[] }>("api/cities");
     return res.data || [];
   } catch {
-    return null; // returns null if API fails - fallback to mock data
+    return null;
   }
 }
 
