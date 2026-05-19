@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import {
   Globe2, FileText, MousePointerClick, Percent, DollarSign, Users, ShieldAlert, Sparkles,
@@ -6,25 +7,79 @@ import {
 } from "lucide-react";
 import { PageShell, SectionCard, Badge } from "@/components/PageShell";
 import { MetricCard } from "@/components/MetricCard";
-import { articles, cities, pipelineStages, sourcePlatforms, sparkline, trafficSeries } from "@/lib/mock-data";
+import { articles as mockArticles, cities as mockCities, pipelineStages, sourcePlatforms, sparkline, trafficSeries } from "@/lib/mock-data";
+import { fetchCities, fetchArticles } from "@/lib/api";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/")(({
   component: Dashboard,
-});
+}));
 
 const badgeTone: Record<string, "primary" | "destructive" | "success" | "brand"> = {
   Trending: "primary", Viral: "destructive", Breaking: "destructive", "High Revenue": "success",
 };
 
 function Dashboard() {
+  const [cities, setCities] = useState(mockCities);
+  const [articles, setArticles] = useState(mockArticles);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [citiesData, articlesData] = await Promise.all([
+          fetchCities(),
+          fetchArticles({ limit: 10 }),
+        ]);
+        if (citiesData && citiesData.length > 0) {
+          setCities(citiesData.map((c: any) => ({
+            id: c.id,
+            name: c.name,
+            state: c.state,
+            subdomain: c.subdomain || "",
+            population: c.population || 0,
+            status: c.status === "active" ? "active" : "paused",
+            articles: c._count?.articles || 0,
+            clicks: c.metrics?.clicks || 0,
+            ctr: c.metrics?.avgCtr || 0,
+            revenue: c.metrics?.revenue || 0,
+            subscribers: c.metrics?.subscriberCount || 0,
+            topCategory: c.metrics?.topCategory || "Local News",
+          })));
+        }
+        if (articlesData && articlesData.length > 0) {
+          setArticles(articlesData.map((a: any) => ({
+            id: a.id,
+            title: a.title,
+            city: a.city?.name || "",
+            category: a.category?.name || "",
+            source: a.sources?.[0]?.platform || "BBC",
+            status: a.status === "published" ? "Published" : a.status === "review_pending" ? "Pending Review" : a.status === "draft" ? "Draft" : "Rejected",
+            ctr: a.metrics?.ctr || 0,
+            clicks: a.metrics?.clicks || 0,
+            revenue: a.metrics?.clicks || 0,
+            engagement: a.metrics?.engagement || 0,
+            aiConfidence: a.aiGenerations?.[0]?.confidenceScore || 0,
+            publishedAt: a.publishedAt || a.createdAt,
+            badges: [],
+          })));
+        }
+      } catch (err) {
+        console.log("Using mock data - backend not connected");
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
   const top = [...articles].sort((a, b) => b.engagement - a.engagement).slice(0, 5);
 
   return (
     <PageShell title="Alyson Intelligence Dashboard" subtitle="Realtime overview across 50 city networks">
       {/* Metrics grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard label="Total Websites" value="50" delta={4.0} data={sparkline(1)} icon={Globe2} />
-        <MetricCard label="Articles Published" value="5,120" delta={8.4} data={sparkline(2)} icon={FileText} />
+        <MetricCard label="Total Websites" value={String(cities.length || 50)} delta={4.0} data={sparkline(1)} icon={Globe2} />
+        <MetricCard label="Articles Published" value={articles.length > 0 ? String(articles.length) : "5,120"} delta={8.4} data={sparkline(2)} icon={FileText} />
         <MetricCard label="Total Clicks" value="1.25M" delta={12.6} data={sparkline(3)} icon={MousePointerClick} />
         <MetricCard label="Average CTR" value="26.0%" delta={1.8} data={sparkline(4)} icon={Percent} />
         <MetricCard label="Total Revenue" value="$320K" delta={9.2} data={sparkline(5)} icon={DollarSign} />
@@ -105,7 +160,7 @@ function Dashboard() {
         <SectionCard
           className="xl:col-span-2"
           title="City Performance"
-          description="Sorted by clicks · click a row for City Intelligence"
+          description={loading ? "Loading from backend..." : "Sorted by clicks · click a row for City Intelligence"}
           action={<Link to="/cities" className="text-xs text-primary font-medium hover:underline inline-flex items-center gap-0.5">View all <ChevronRight className="h-3 w-3" /></Link>}
         >
           <div className="overflow-x-auto -mx-5">
@@ -180,7 +235,7 @@ function Dashboard() {
         </SectionCard>
       </div>
 
-      {/* Bottom row: source mix + category */}
+      {/* Bottom row */}
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
         <SectionCard title="Source Mix" description="Articles ingested by platform (last 7 days)">
           <div className="h-56">
