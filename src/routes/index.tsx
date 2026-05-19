@@ -1,9 +1,35 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import {
-  Globe2, FileText, MousePointerClick, Percent, DollarSign, Users, ShieldAlert, Sparkles,
-  ArrowUpRight, Flame, Zap, TrendingUp, Eye, ChevronRight,
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import {
+  Globe2,
+  FileText,
+  MousePointerClick,
+  Percent,
+  DollarSign,
+  Users,
+  ShieldAlert,
+  Sparkles,
+  ArrowUpRight,
+  Flame,
+  Zap,
+  TrendingUp,
+  Eye,
+  ChevronRight,
 } from "lucide-react";
 import { PageShell, SectionCard, Badge } from "@/components/PageShell";
 import { MetricCard } from "@/components/MetricCard";
@@ -14,7 +40,10 @@ export const Route = createFileRoute("/")({
 });
 
 const badgeTone: Record<string, "primary" | "destructive" | "success" | "brand"> = {
-  Trending: "primary", Viral: "destructive", Breaking: "destructive", "High Revenue": "success",
+  Trending: "primary",
+  Viral: "destructive",
+  Breaking: "destructive",
+  "High Revenue": "success",
 };
 
 type JsonRecord = Record<string, unknown>;
@@ -98,8 +127,14 @@ type DashboardData = {
 };
 
 const integerFormatter = new Intl.NumberFormat("en-US");
-const compactFormatter = new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 2 });
-const compactCurrencyFormatter = new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 });
+const compactFormatter = new Intl.NumberFormat("en-US", {
+  notation: "compact",
+  maximumFractionDigits: 2,
+});
+const compactCurrencyFormatter = new Intl.NumberFormat("en-US", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
 
 const defaultDashboardData: DashboardData = {
   metrics: {
@@ -239,8 +274,9 @@ const normalizeDashboardData = (payload: unknown): DashboardData => {
   const metrics = isRecord(data.metrics) ? data.metrics : {};
   const deltas = isRecord(metrics.deltas) ? metrics.deltas : {};
 
-  const trafficSeries = pickArray(data, ["trafficSeries", "traffic", "networkTraffic"])
-    .map((item, index) => normalizeTrafficPoint(item, index));
+  const trafficSeries = pickArray(data, ["trafficSeries", "traffic", "networkTraffic"]).map(
+    (item, index) => normalizeTrafficPoint(item, index),
+  );
   const cities = pickArray(data, ["cities", "cityPerformance"])
     .map((item, index) => normalizeCity(item, index))
     .filter((city) => city.name.length > 0);
@@ -254,24 +290,38 @@ const normalizeDashboardData = (payload: unknown): DashboardData => {
     .map(normalizeSourcePlatform)
     .filter((platform) => platform.name.length > 0);
 
-  const derivedArticlesPublished = cities.reduce((sum, city) => sum + city.articles, 0) || articles.length;
-  const derivedTotalClicks = trafficSeries.reduce((sum, point) => sum + point.clicks, 0) || articles.reduce((sum, article) => sum + article.clicks, 0);
-  const derivedAverageCtr = cities.length > 0
-    ? cities.reduce((sum, city) => sum + city.ctr, 0) / cities.length
-    : 0;
-  const derivedTotalRevenue = trafficSeries.reduce((sum, point) => sum + point.revenue, 0) || cities.reduce((sum, city) => sum + city.revenue, 0);
+  const derivedArticlesPublished =
+    cities.reduce((sum, city) => sum + city.articles, 0) || articles.length;
+  const derivedTotalClicks =
+    trafficSeries.reduce((sum, point) => sum + point.clicks, 0) ||
+    articles.reduce((sum, article) => sum + article.clicks, 0);
+  const derivedAverageCtr =
+    cities.length > 0 ? cities.reduce((sum, city) => sum + city.ctr, 0) / cities.length : 0;
+  const derivedTotalRevenue =
+    trafficSeries.reduce((sum, point) => sum + point.revenue, 0) ||
+    cities.reduce((sum, city) => sum + city.revenue, 0);
   const derivedSubscribers = cities.reduce((sum, city) => sum + city.subscribers, 0);
-  const derivedPendingReviews = articles.filter((article) => article.status.toLowerCase().includes("pending")).length;
+  const derivedPendingReviews = articles.filter((article) =>
+    article.status.toLowerCase().includes("pending"),
+  ).length;
 
   return {
     metrics: {
       totalWebsites: pickNumber(metrics, ["totalWebsites", "total_websites"], 0),
-      articlesPublished: pickNumber(metrics, ["articlesPublished", "articles_published"], derivedArticlesPublished),
+      articlesPublished: pickNumber(
+        metrics,
+        ["articlesPublished", "articles_published"],
+        derivedArticlesPublished,
+      ),
       totalClicks: pickNumber(metrics, ["totalClicks", "total_clicks"], derivedTotalClicks),
       averageCtr: pickNumber(metrics, ["averageCtr", "average_ctr"], derivedAverageCtr),
       totalRevenue: pickNumber(metrics, ["totalRevenue", "total_revenue"], derivedTotalRevenue),
       subscribers: pickNumber(metrics, ["subscribers"], derivedSubscribers),
-      pendingReviews: pickNumber(metrics, ["pendingReviews", "pending_reviews"], derivedPendingReviews),
+      pendingReviews: pickNumber(
+        metrics,
+        ["pendingReviews", "pending_reviews"],
+        derivedPendingReviews,
+      ),
       aiArticlesToday: pickNumber(metrics, ["aiArticlesToday", "ai_articles_today"], 0),
       deltas: {
         totalWebsites: pickNumber(deltas, ["totalWebsites", "total_websites"], 0),
@@ -292,9 +342,11 @@ const normalizeDashboardData = (payload: unknown): DashboardData => {
   };
 };
 
-const formatInteger = (value: number): string => integerFormatter.format(Math.max(0, Math.round(value)));
+const formatInteger = (value: number): string =>
+  integerFormatter.format(Math.max(0, Math.round(value)));
 const formatCompact = (value: number): string => compactFormatter.format(Math.max(0, value));
-const formatCurrencyCompact = (value: number): string => `$${compactCurrencyFormatter.format(Math.max(0, value))}`;
+const formatCurrencyCompact = (value: number): string =>
+  `$${compactCurrencyFormatter.format(Math.max(0, value))}`;
 
 function Dashboard() {
   const [dashboardData, setDashboardData] = useState<DashboardData>(defaultDashboardData);
@@ -318,12 +370,13 @@ function Dashboard() {
     };
   }, []);
 
-  const top = [...dashboardData.articles]
-    .sort((a, b) => b.engagement - a.engagement)
-    .slice(0, 5);
+  const top = [...dashboardData.articles].sort((a, b) => b.engagement - a.engagement).slice(0, 5);
 
   return (
-    <PageShell title="Alyson Intelligence Dashboard" subtitle="Realtime overview across 50 city networks">
+    <PageShell
+      title="Alyson Intelligence Dashboard"
+      subtitle="Realtime overview across 50 city networks"
+    >
       {/* Metrics grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard
@@ -393,7 +446,12 @@ function Dashboard() {
           action={
             <div className="flex items-center gap-1 rounded-md border border-border bg-card p-0.5 text-xs">
               {["7d", "30d", "90d"].map((p, i) => (
-                <button key={p} className={`px-2.5 py-1 rounded ${i === 1 ? "bg-muted font-semibold" : "text-muted-foreground"}`}>{p}</button>
+                <button
+                  key={p}
+                  className={`px-2.5 py-1 rounded ${i === 1 ? "bg-muted font-semibold" : "text-muted-foreground"}`}
+                >
+                  {p}
+                </button>
               ))}
             </div>
           }
@@ -411,30 +469,74 @@ function Dashboard() {
                     <stop offset="100%" stopColor="var(--color-chart-2)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="day" tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }} axisLine={false} tickLine={false} width={40} />
-                <Tooltip contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 8, fontSize: 12 }} />
-                <Area type="monotone" dataKey="clicks" stroke="var(--color-primary)" strokeWidth={2} fill="url(#g-clicks)" />
-                <Area type="monotone" dataKey="revenue" stroke="var(--color-chart-2)" strokeWidth={2} fill="url(#g-rev)" />
+                <CartesianGrid
+                  stroke="var(--color-border)"
+                  strokeDasharray="3 3"
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="day"
+                  tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }}
+                  axisLine={false}
+                  tickLine={false}
+                  width={40}
+                />
+                <Tooltip
+                  contentStyle={{
+                    background: "var(--color-card)",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: 8,
+                    fontSize: 12,
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="clicks"
+                  stroke="var(--color-primary)"
+                  strokeWidth={2}
+                  fill="url(#g-clicks)"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="var(--color-chart-2)"
+                  strokeWidth={2}
+                  fill="url(#g-rev)"
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </SectionCard>
 
-        <SectionCard title="AI Pipeline" description="Live job throughput" action={<Badge tone="success">Healthy</Badge>}>
+        <SectionCard
+          title="AI Pipeline"
+          description="Live job throughput"
+          action={<Badge tone="success">Healthy</Badge>}
+        >
           <ul className="space-y-3">
             {dashboardData.pipelineStages.map((s, i) => (
               <li key={s.name}>
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
-                    <div className="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[10px] font-semibold">{i + 1}</div>
+                    <div className="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[10px] font-semibold">
+                      {i + 1}
+                    </div>
                     <span className="font-medium">{s.name}</span>
                   </div>
-                  <span className="tabular-nums text-muted-foreground">{s.active} active · {s.queued} queued</span>
+                  <span className="tabular-nums text-muted-foreground">
+                    {s.active} active · {s.queued} queued
+                  </span>
                 </div>
                 <div className="mt-1.5 h-1.5 rounded-full bg-muted overflow-hidden">
-                  <div className="h-full bg-primary rounded-full" style={{ width: `${s.success}%` }} />
+                  <div
+                    className="h-full bg-primary rounded-full"
+                    style={{ width: `${s.success}%` }}
+                  />
                 </div>
               </li>
             ))}
@@ -444,7 +546,9 @@ function Dashboard() {
               <div key={p.name} className="text-center">
                 <div className="text-[11px] text-muted-foreground">{p.name}</div>
                 <div className="text-sm font-semibold tabular-nums">{p.jobs}</div>
-                <div className={`h-1 rounded-full mx-auto mt-1 w-8 ${p.status === "healthy" ? "bg-success" : "bg-warning"}`} />
+                <div
+                  className={`h-1 rounded-full mx-auto mt-1 w-8 ${p.status === "healthy" ? "bg-success" : "bg-warning"}`}
+                />
               </div>
             ))}
           </div>
@@ -457,7 +561,14 @@ function Dashboard() {
           className="xl:col-span-2"
           title="City Performance"
           description="Sorted by clicks · click a row for City Intelligence"
-          action={<Link to="/cities" className="text-xs text-primary font-medium hover:underline inline-flex items-center gap-0.5">View all <ChevronRight className="h-3 w-3" /></Link>}
+          action={
+            <Link
+              to="/cities"
+              className="text-xs text-primary font-medium hover:underline inline-flex items-center gap-0.5"
+            >
+              View all <ChevronRight className="h-3 w-3" />
+            </Link>
+          }
         >
           <div className="overflow-x-auto -mx-5">
             <table className="w-full text-sm">
@@ -475,19 +586,33 @@ function Dashboard() {
               </thead>
               <tbody>
                 {dashboardData.cities.slice(0, 8).map((c, index) => (
-                  <tr key={`${c.id}-${index}`} className="border-b border-border last:border-0 hover:bg-muted/40 transition cursor-pointer">
+                  <tr
+                    key={`${c.id}-${index}`}
+                    className="border-b border-border last:border-0 hover:bg-muted/40 transition cursor-pointer"
+                  >
                     <td className="py-2.5 px-5">
-                      <Link to="/cities/$cityId" params={{ cityId: String(c.id || index + 1) }} className="font-medium hover:text-primary">
-                        {c.name}<span className="text-muted-foreground font-normal ml-1">{c.state}</span>
+                      <Link
+                        to="/cities/$cityId"
+                        params={{ cityId: String(c.id || index + 1) }}
+                        className="font-medium hover:text-primary"
+                      >
+                        {c.name}
+                        <span className="text-muted-foreground font-normal ml-1">{c.state}</span>
                       </Link>
                     </td>
                     <td className="text-right tabular-nums px-3">{c.articles}</td>
                     <td className="text-right tabular-nums px-3">{c.clicks.toLocaleString()}</td>
                     <td className="text-right tabular-nums px-3">{c.ctr}%</td>
-                    <td className="text-right tabular-nums px-3">${(c.revenue / 1000).toFixed(1)}k</td>
-                    <td className="text-right tabular-nums px-3">{c.subscribers.toLocaleString()}</td>
+                    <td className="text-right tabular-nums px-3">
+                      ${(c.revenue / 1000).toFixed(1)}k
+                    </td>
+                    <td className="text-right tabular-nums px-3">
+                      {c.subscribers.toLocaleString()}
+                    </td>
                     <td className="px-3 text-muted-foreground">{c.topCategory}</td>
-                    <td className="px-5"><Badge tone={c.status === "active" ? "success" : "neutral"}>{c.status}</Badge></td>
+                    <td className="px-5">
+                      <Badge tone={c.status === "active" ? "success" : "neutral"}>{c.status}</Badge>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -498,7 +623,10 @@ function Dashboard() {
         <SectionCard title="Trending Content" description="Top performing across the network">
           <ul className="space-y-3">
             {top.map((a, index) => (
-              <li key={`${a.id}-${index}`} className="group p-3 -mx-2 rounded-lg hover:bg-muted/40 transition">
+              <li
+                key={`${a.id}-${index}`}
+                className="group p-3 -mx-2 rounded-lg hover:bg-muted/40 transition"
+              >
                 <div className="flex items-start gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">
@@ -511,14 +639,21 @@ function Dashboard() {
                         </Badge>
                       ))}
                     </div>
-                    <p className="mt-1.5 text-sm font-medium leading-snug line-clamp-2">{a.title}</p>
+                    <p className="mt-1.5 text-sm font-medium leading-snug line-clamp-2">
+                      {a.title}
+                    </p>
                     <div className="mt-1.5 flex items-center gap-2 text-[11px] text-muted-foreground">
                       <span>{a.city}</span>·<span>{a.source}</span>·<span>{a.category}</span>
                     </div>
                     <div className="mt-2 flex items-center gap-3 text-[11px]">
-                      <span className="tabular-nums"><Eye className="inline h-3 w-3 mr-0.5" />{a.clicks.toLocaleString()}</span>
+                      <span className="tabular-nums">
+                        <Eye className="inline h-3 w-3 mr-0.5" />
+                        {a.clicks.toLocaleString()}
+                      </span>
                       <span className="tabular-nums text-success">CTR {a.ctr}%</span>
-                      <span className="tabular-nums text-muted-foreground">AI {(a.aiConfidence * 100).toFixed(0)}%</span>
+                      <span className="tabular-nums text-muted-foreground">
+                        AI {(a.aiConfidence * 100).toFixed(0)}%
+                      </span>
                     </div>
                   </div>
                   <button className="opacity-0 group-hover:opacity-100 transition text-[11px] font-medium text-primary inline-flex items-center gap-0.5 self-start">
@@ -537,12 +672,35 @@ function Dashboard() {
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={dashboardData.sourcePlatforms} barSize={28}>
-                <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }} axisLine={false} tickLine={false} width={32} />
-                <Tooltip contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 8, fontSize: 12 }} />
+                <CartesianGrid
+                  stroke="var(--color-border)"
+                  strokeDasharray="3 3"
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }}
+                  axisLine={false}
+                  tickLine={false}
+                  width={32}
+                />
+                <Tooltip
+                  contentStyle={{
+                    background: "var(--color-card)",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: 8,
+                    fontSize: 12,
+                  }}
+                />
                 <Bar dataKey="jobs" radius={[6, 6, 0, 0]}>
-                  {dashboardData.sourcePlatforms.map((_, i) => <Cell key={i} fill="var(--color-primary)" fillOpacity={0.4 + i * 0.1} />)}
+                  {dashboardData.sourcePlatforms.map((_, i) => (
+                    <Cell key={i} fill="var(--color-primary)" fillOpacity={0.4 + i * 0.1} />
+                  ))}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
@@ -553,13 +711,46 @@ function Dashboard() {
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={dashboardData.trafficSeries.slice(-14)}>
-                <CartesianGrid stroke="var(--color-border)" strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="day" tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }} axisLine={false} tickLine={false} width={32} />
-                <Tooltip contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 8, fontSize: 12 }} />
+                <CartesianGrid
+                  stroke="var(--color-border)"
+                  strokeDasharray="3 3"
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="day"
+                  tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }}
+                  axisLine={false}
+                  tickLine={false}
+                  width={32}
+                />
+                <Tooltip
+                  contentStyle={{
+                    background: "var(--color-card)",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: 8,
+                    fontSize: 12,
+                  }}
+                />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
-                <Line type="monotone" dataKey="articles" stroke="var(--color-primary)" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="revenue" stroke="var(--color-chart-2)" strokeWidth={2} dot={false} />
+                <Line
+                  type="monotone"
+                  dataKey="articles"
+                  stroke="var(--color-primary)"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="var(--color-chart-2)"
+                  strokeWidth={2}
+                  dot={false}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>

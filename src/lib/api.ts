@@ -2,7 +2,9 @@ export const API_BASE_URL = "https://reasonable-acceptance-production.up.railway
 const NORMALIZED_API_BASE_URL = API_BASE_URL.replace(/\/$/, "");
 
 export async function apiFetch<T = unknown>(path: string, options?: RequestInit): Promise<T> {
-  const url = path.startsWith("http") ? path : `${NORMALIZED_API_BASE_URL}/${path.replace(/^\//, "")}`;
+  const url = path.startsWith("http")
+    ? path
+    : `${NORMALIZED_API_BASE_URL}/${path.replace(/^\//, "")}`;
 
   const response = await fetch(url, {
     headers: {
