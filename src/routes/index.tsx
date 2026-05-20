@@ -2,13 +2,35 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react"; // Added for Live Data
 import { apiFetch } from "@/lib/api"; // Added to talk to Railway
 import {
-  Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Legend,
-  Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
 import {
-  Globe2, FileText, MousePointerClick, Percent, DollarSign,
-  Users, ShieldAlert, Sparkles, ArrowUpRight, Flame, Zap,
-  TrendingUp, Eye, ChevronRight,
+  Globe2,
+  FileText,
+  MousePointerClick,
+  Percent,
+  DollarSign,
+  Users,
+  ShieldAlert,
+  Sparkles,
+  ArrowUpRight,
+  Flame,
+  Zap,
+  TrendingUp,
+  Eye,
+  ChevronRight,
 } from "lucide-react";
 import { PageShell, SectionCard, Badge } from "@/components/PageShell";
 import { MetricCard } from "@/components/MetricCard";
@@ -19,7 +41,10 @@ export const Route = createFileRoute("/")({
 });
 
 const badgeTone: Record<string, "primary" | "destructive" | "success" | "brand"> = {
-  Trending: "primary", Viral: "destructive", Breaking: "destructive", "High Revenue": "success",
+  Trending: "primary",
+  Viral: "destructive",
+  Breaking: "destructive",
+  "High Revenue": "success",
 };
 
 function Dashboard() {
@@ -53,7 +78,7 @@ function Dashboard() {
     pending: "0",
     aiToday: "0",
     cities: [],
-    trending: []
+    trending: [],
   };
 
   return (
@@ -93,7 +118,7 @@ function Dashboard() {
             </table>
             {loading && <p className="text-center py-4 text-xs">Connecting to Railway...</p>}
             {!loading && stats.cities?.length === 0 && (
-                <p className="text-center py-4 text-xs text-destructive">No data found at /stats endpoint yet.</p>
+              <p className="text-center py-4 text-xs text-destructive">No data found at /stats endpoint yet.</p>
             )}
           </div>
         </SectionCard>
